@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual do Jogador: Invasão em Pine Creek</title>
+    <style>
+        :root {
+            --bg-color: #050a0e;
+            --panel-bg: #0b131a;
+            --text-main: #c4d4d3;
+            --accent-green: #39ff14;
+            --accent-dark: #1b4522;
+            --border-color: #244234;
+            --font-mono: 'Courier New', Courier, monospace;
+            --font-sans: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            --alert-red: #ff3333;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-mono);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            /* Scanline effect */
+            background-image: 
+                radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.8) 100%),
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(57, 255, 20, 0.03) 2px, rgba(57, 255, 20, 0.03) 4px);
+            background-attachment: fixed;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            border-bottom: 2px solid var(--accent-dark);
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        header::before {
+            content: '[ TOP SECRET ]';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--alert-red);
+            font-weight: bold;
+            font-size: 1.2em;
+            border: 2px solid var(--alert-red);
+            padding: 5px 10px;
+            transform: rotate(-5deg);
+            opacity: 0.8;
+            box-shadow: 0 0 5px var(--alert-red);
+        }
+
+        h1 {
+            color: var(--accent-green);
+            font-family: var(--font-sans);
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            text-shadow: 0 0 10px rgba(57, 255, 20, 0.4);
+            margin-bottom: 10px;
+        }
+
+        .intro {
+            max-width: 800px;
+            margin: 0 auto 40px;
+            text-align: justify;
+            background: rgba(11, 19, 26, 0.8);
+            padding: 20px;
+            border-left: 4px solid var(--accent-green);
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding-bottom: 50px;
+        }
+
+        /* Accordion Styles */
+        .step {
+            margin-bottom: 15px;
+            border: 1px solid var(--border-color);
+            background: rgba(11, 19, 26, 0.7);
+            backdrop-filter: blur(5px);
+        }
+
+        .step-header {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: linear-gradient(90deg, var(--panel-bg) 0%, #11202b 100%);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            color: var(--accent-green);
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .step-header:hover {
+            background: var(--accent-dark);
+            color: #fff;
+            text-shadow: 0 0 5px #fff;
+        }
+
+        .step-content {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, padding 0.4s ease;
+            background: rgba(5, 10, 14, 0.9);
+            opacity: 0;
+        }
+
+        .step.active .step-content {
+            padding: 20px;
+            max-height: 10000px; /* high enough for content */
+            opacity: 1;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .step-header::after {
+            content: '[ + ]';
+            font-family: var(--font-mono);
+        }
+
+        .step.active .step-header::after {
+            content: '[ - ]';
+            color: var(--alert-red);
+        }
+
+        h3 {
+            color: #a8baba;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 5px;
+            margin-top: 25px;
+            font-family: var(--font-sans);
+            letter-spacing: 1px;
+        }
+
+        ul {
+            list-style-type: square;
+            color: #8c9c9c;
+        }
+
+        li {
+            margin-bottom: 15px;
+        }
+
+        strong {
+            color: var(--accent-green);
+        }
+
+        .data-block {
+            background: rgba(27, 69, 34, 0.15);
+            border-left: 2px solid var(--accent-green);
+            padding: 15px;
+            margin: 15px 0;
+            font-size: 0.95em;
+            transition: background 0.3s ease;
+        }
+
+        .data-block:hover {
+            background: rgba(27, 69, 34, 0.3);
+        }
+        
+        .typewriter {
+            overflow: hidden;
+            border-right: .15em solid var(--accent-green);
+            white-space: nowrap;
+            margin: 0 auto;
+            letter-spacing: .15em;
+            animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+            font-size: 0.9em;
+            color: #a8baba;
+        }
+
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--accent-green); }
+        }
+
+        /* Glitch effect on hover */
+        .glitch-hover:hover {
+            animation: glitch 0.2s linear infinite;
+            color: #fff;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0) }
+            20% { transform: translate(-2px, 2px) }
+            40% { transform: translate(-2px, -2px) }
+            60% { transform: translate(2px, 2px) }
+            80% { transform: translate(2px, -2px) }
+            100% { transform: translate(0) }
+        }
+        
+        /* Interactive Highlight for list items */
+        li:hover {
+            color: #d1e0e0;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color); 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color); 
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-green); 
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: rgba(11, 19, 26, 0.5);
+            font-size: 0.9em;
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            text-align: left;
+            color: var(--text-main);
+        }
+
+        th {
+            background: rgba(27, 69, 34, 0.4);
+            color: var(--accent-green);
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background: rgba(5, 10, 14, 0.6);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1 class="glitch-hover">Invasão em Pine Creek</h1>
+        <p class="typewriter" style="max-width: 360px;">DIRETÓRIO: MANUAL DO JOGADOR</p>
+    </header>
+
+    <div class="intro">
+        <p><strong>Bem-vindos a Pine Creek.</strong> Nossa campanha é um Terror de Sobrevivência (Slow-Burn) focado em mistério, tensão e letalidade. Vocês não são super-heróis; são pessoas lidando com o impossível em uma fazenda isolada. Recursos são escassos, e o perigo é real.</p>
+        <p>Para refletir isso, usaremos o sistema KAOS com adaptações exclusivas. Siga o passo a passo abaixo para montar sua ficha!</p>
+    </div>
+
+    <div class="container">
+        
+        <!-- PASSO 1 -->
+        <div class="step">
+            <div class="step-header">PASSO 1: Raça e Status Base</div>
+            <div class="step-content">
+                <p>Nossa história é focada na humanidade enfrentando o desconhecido. Em KAOS, não temos uma "barra de vida única". O corpo é dividido em 12 partes (cabeça, pescoço, tronco superior e inferior, braços e pernas), cada uma com sua própria resistência.</p>
+                <p>Escolha uma das duas raças abaixo e anote a sua Vida Base por partes do corpo:</p>
+                
+                <div class="data-block">
+                    <h3>1. Terranos (Humanos)</h3>
+                    <p>A raça do potencial infinito, focada em sobrevivência e resiliência no tronco.</p>
+                    <ul>
+                        <li><strong>Vida Base:</strong> Cabeça (5), Pescoço (5), Tronco Superior (15), Tronco Inferior (15), Braços/Mãos cada (5), Pernas/Pés cada (5).</li>
+                        <li><strong>Valores Secundários:</strong> Vigor: 25 | Alma: 15 | Saúde Mental: 30.</li>
+                        <li><strong>Passiva de Sobrevivência:</strong> Quando ficam com a Vida do Tronco abaixo de 40%, ganham +5 de dano físico e recuperam +5 de Vigor por turno.</li>
+                        <li><strong>Talento Natural:</strong> Superação Heroica (Quando tira 1 no d6 de perícia, ganha +10 de dano no próximo ataque).</li>
+                    </ul>
+                </div>
+
+                <div class="data-block">
+                    <h3>2. Sintéticos (Androides)</h3>
+                    <p>Vida artificial consciente. São lógicos, incansáveis e possuem um chassi artificial muito resistente.</p>
+                    <ul>
+                        <li><strong>Vida Base:</strong> Cabeça (10), Pescoço (10), Tronco Superior (20), Tronco Inferior (20), Braços/Mãos cada (10), Pernas/Pés cada (10).</li>
+                        <li><strong>Valores Secundários:</strong> Vigor: 20 | Alma (Estabilidade): 20 | Saúde Mental: 25.</li>
+                        <li><strong>Blindagem Subdérmica:</strong> Reduz em 5 todo o Dano Físico recebido.</li>
+                        <li><strong>Estabilidade:</strong> Resultados 2 e 3 no dado de perícia (d6) contam como "Eco" (Sucesso leve).</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- PASSO 2 -->
+        <div class="step">
+            <div class="step-header">PASSO 2: Atributos e Fórmulas de Vida</div>
+            <div class="step-content">
+                <p>Existem 6 Atributos: Agilidade (AGI), Poder (POD), Percepção (PER), Intelecto (INT), Presença (PRE) e Físico (FIS).</p>
+                
+                <div class="data-block" style="border-left-color: var(--alert-red); background: rgba(255, 51, 51, 0.1);">
+                    <p style="color: var(--alert-red); margin: 0;"><strong>[ AVISO DE SISTEMA: A REGRA DA FAZENDA ]</strong><br> Todos os atributos vão de 1 a 7 e começam no Nível 1. Você recebe 4 pontos para distribuir (Máximo Nível 3 na criação).</p>
+                </div>
+
+                <div class="data-block">
+                    <h3>Iniciativa</h3>
+                    <p>Cada jogador possuirá uma <strong>iniciativa fixa</strong>, que é a soma dos seus atributos <strong>Agilidade</strong>, <strong>Percepção</strong> e <strong>Presença</strong> dividida por 3 (divisões quebradas são arredondadas: 3.5 e 4.3 equivalem a 4 e 4; 3.6 ou 4.7 equivalem a 4 e 5).</p>
+                    <p>O que definirá qual jogador, NPC ou monstro age primeiro é a maior iniciativa na mesa. Em caso de empate:</p>
+                    <ul>
+                        <li>Os empatados jogarão uma moeda (cara ou coroa) para decidir quem começa primeiro.</li>
+                        <li>Se houver mais personagens empatados, é recomendado utilizar um dado ou outra forma de desempate.</li>
+                        <li>Opcional: O mestre pode considerar quem possui a maior Agilidade (ou outro atributo da iniciativa) para desempatar antes de jogar a moeda.</li>
+                    </ul>
+                </div>
+
+                <h3>Fórmulas de Vida</h3>
+                <p>Some as Bases da sua Raça + Origem com as Fórmulas abaixo:</p>
+                <ul>
+                    <li><strong>Cabeça:</strong> Base + [(FIS + INT) x 5]</li>
+                    <li><strong>Pescoço e Troncos (Sup/Inf):</strong> Base + [FIS x 7]</li>
+                    <li><strong>Braços e Mãos:</strong> Base + [(FIS + POD + AGI) x 4]</li>
+                    <li><strong>Pernas e Pés:</strong> Base + [(FIS + POD + AGI) x 5]</li>
+                    <li><strong>Vigor Máximo:</strong> Base + [(FIS + AGI) x 5]</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- PASSO 3 -->
+        <div class="step">
+            <div class="step-header">PASSO 3: A Origem (Seu passado)</div>
+            <div class="step-content">
+                <p>A Origem define quem você era antes da invasão. O Bônus de Vida concedido aqui deve ser somado exclusivamente ao seu Tronco Superior e Inferior.</p>
+                <ul>
+                    <li>🌾 <strong>O AGRICULTOR:</strong> +10 Vida no Tronco | +5 Vigor. <br><em style="color:#a8baba;">Sangue Caipira:</em> Gaste 5 Vigor e uma Reação para sofrer só metade do dano físico. Se usar ferramenta, ganha contra-golpe com +1d6 Dano Esmagador.</li>
+                    <li>🪖 <strong>O SOLDADO:</strong> +5 Vida no Tronco | +10 Vigor. <br><em style="color:#a8baba;">Disciplina de Fogo:</em> Gaste 5 Vigor e Interrompa o ataque de um inimigo contra um aliado. Causa +1d6 Dano Tático extra e faz o inimigo errar o golpe.</li>
+                    <li>🔧 <strong>O MECÂNICO:</strong> +5 Vida no Tronco | +10 Vigor. <br><em style="color:#a8baba;">Gambiarra:</em> Gaste 5 Vigor para restaurar 1d6+2 PV da armadura/tronco de um aliado, ou montar uma barricada de 2d6 PV para absorver tiros.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- PASSO 4 -->
+        <div class="step">
+            <div class="step-header">PASSO 4: Classes (Arquétipos)</div>
+            <div class="step-content">
+                <div class="data-block" style="border-left-color: var(--alert-red); background: rgba(255, 51, 51, 0.1);">
+                    <p style="color: var(--alert-red); margin: 0; font-weight: bold;">[ AVISO: NÃO É NECESSÁRIO VISUALIZAR ESTA SEÇÃO AGORA ]</p>
+                </div>
+                <p>Escolha sua forma de combate. As habilidades ativas substituem as antigas "condições" por Dano em Dados direto na Vida ou Vigor do inimigo.</p>
+                <ul>
+                    <li>⚔️ <strong>O GUERREIRO (Combate Direto):</strong> Foco em dano bruto e defesa. Habilidades permitem causar Dano Tático (1d6) ao se mover rapidamente pelos inimigos, Dano Brutal (1d6) batendo no chão e desequilibrando-os, ou Dano de Asfixia (2d6) agarrando e torcendo as criaturas.</li>
+                    <li>🛠️ <strong>O ARTÍFICE (Engenhocas):</strong> Especialista em armadilhas e suporte. Pode criar barricadas, curar e lançar granadas químicas que causam dano em área + 1d6 Dano de Estilhaço. Pode armar o terreno para causar 2d6 de Dano de Emboscada.</li>
+                    <li>🌀 <strong>O CATALISADOR (Energia do Caos):</strong> Manipula o Caos. Capaz de sobrecarregar feitiços com vigor extra, usar a gravidade para causar 1d6 Dano Esmagador por turno no peito do alvo, ou cancelar habilidades alienígenas gerando 1d6 Dano de Desgaste Mental.</li>
+                    <li>🏭 <strong>O INDUSTRIAL (Infraestrutura):</strong> Coleta sucata (UMP) para modificar o campo. Solda armas na própria armadura, reforça barricadas que causam 1d6 Dano de Escombros ao serem quebradas pelos monstros, ou planta sementes anômalas que explodem em 1d6 Dano Ácido.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- PASSO 5 -->
+        <div class="step">
+            <div class="step-header">PASSO 5: Perícias e Testes</div>
+            <div class="step-content">
+                <p>Você ganha as perícias da sua Origem e possui <strong>3 Perícias Livres extras</strong> (Duas no Estágio 1, e Uma no Estágio 2).</p>
+                
+                <div class="data-block">
+                    <h3>Dinâmica de Rolagem</h3>
+                    <p>O sistema usa <strong>d10</strong> (para o Atributo) + <strong>d6</strong> (para a Perícia).</p>
+                    <ul>
+                        <li><strong>Nível do Atributo:</strong> Define quantos d10 você rola.<br>
+                            <em>Nível 1:</em> 1d10, mantém o resultado.<br>
+                            <em>Nível 2:</em> 2d10, mantém o melhor.<br>
+                            <em>Nível 3:</em> 3d10, mantém os 2 melhores.<br>
+                            <em>(Níveis superiores adicionam mais dados)</em>
+                        </li>
+                        <li><strong>Dado de Perícia (d6):</strong> (Apenas se possuir a perícia)<br>
+                            <strong style="color:var(--alert-red);">1 (Caos Destrutivo):</strong> Falha crítica. Sofre dano direto no Vigor/Vida.<br>
+                            <strong style="color:#d4b735;">4 ou 5 (Eco):</strong> Sucesso leve. Reduz dificuldade em -3.<br>
+                            <strong style="color:var(--accent-green);">6 (Caos Criativo):</strong> Sucesso perfeito. Reduz dificuldade em -5 e traz benefícios.
+                        </li>
+                        <li><strong>E se não tiver a Perícia?</strong> Rola 2d10, fica com o <em>pior</em> resultado, e não rola o d6.</li>
+                    </ul>
+                </div>
+
+                <h3>Lista de Perícias:</h3>
+                <ul>
+                    <li>🏃 <strong>Físicas:</strong> Atletismo, Prontidão, Combate, Pontaria.</li>
+                    <li>🗣️ <strong>Sociais:</strong> Influência, Erudição, Furtividade, Intuição.</li>
+                    <li>🔧 <strong>Técnicas:</strong> Medicina, Ofícios, Sobrevivência, Investigação.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- MECÂNICA: COMBATE -->
+        <div class="step">
+            <div class="step-header">MECÂNICA 1: Combate Tático (Ações e Zonas)</div>
+            <div class="step-content">
+                <p>O combate em KAOS é tático, dinâmico e mortal. O posicionamento e a forma como gastam seu fôlego definem quem sobrevive.</p>
+                
+                <div class="data-block">
+                    <h3>Movimentação por Zonas</h3>
+                    <p>Nós não contamos "quadradinhos" no mapa. O mapa é dividido em <strong>Zonas</strong> (ex: o balcão do mercado é uma zona, os fundos são outra). A distância e a cobertura são medidas por essas zonas.</p>
+                    
+                    <h3>Iniciativa</h3>
+                    <p>Lembre-se: sua iniciativa é fixa (Agilidade + Percepção + Presença dividida por 3). Quem tiver o maior valor age primeiro. Empates são decididos na moeda ou pela maior Agilidade.</p>
+                    
+                    <h3>Terrenos e Destruição</h3>
+                    <p>O ambiente reage à luta. Terrenos variam de <em>Normais</em> a <em>Arrasados</em> ou <em>Destruídos</em>. Poças de lama, prateleiras caídas ou áreas em chamas exigem Intenções Complexas ou Extremas apenas para serem atravessadas sem causar penalidades.</p>
+                </div>
+
+                <h3>A Economia de Ações (As 3 Intenções)</h3>
+                <p>Cada jogador possui <strong>3 Intenções</strong> por turno para gastar como quiser. Você pode usar as três para atacar, ou usar uma para correr e duas para se defender. As intenções são divididas em:</p>
+                <ul>
+                    <li><strong style="color:#d4b735;">Ações Rápidas (Livres):</strong> Falar rapidamente, soltar um item ou expressar reações. Não custam intenções.</li>
+                    <li><strong style="color:var(--text-main);">Intenções Normais (Custo 2):</strong> Movimento simples (andar), Ataque padrão, Defesa padrão (reduz dano pela metade), Interação (recarregar arma, abrir porta), ou ativar uma Habilidade Simples.</li>
+                    <li><strong style="color:#ffaa33;">Intenções Complexas (Custo 5):</strong> Ataque Pesado (causa mais dano/condição), Defesa Máxima (pode anular o dano ou interceptar ataque em aliado), ou Movimentação Complexa (ignorar terrenos difíceis).</li>
+                    <li><strong style="color:var(--alert-red);">Intenções Extremas (Custo 7):</strong> Ataque Extremo (triplo do dano), Defesa Perfeita (anula quase qualquer dano), ou Finalizar um inimigo caído.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- MECÂNICA: INVESTIGAÇÃO -->
+        <div class="step">
+            <div class="step-header">MECÂNICA 2: Cenas de Investigação</div>
+            <div class="step-content">
+                <p>Em Pine Creek, nem tudo se resolve na bala. Vocês precisarão explorar locais sombrios em busca de respostas.</p>
+                
+                <div class="data-block">
+                    <h3>Foco Narrativo</h3>
+                    <p>A investigação flui através da narrativa. Vocês não precisam rolar dados para tudo; basta descreverem onde estão procurando. Os testes de dados só serão exigidos em momentos técnicos (ex: arrombar uma fechadura, analisar sangue ou hackear um rádio).</p>
+                </div>
+
+                <h3>Como a Investigação Funciona (Os 4 Passos)</h3>
+                <p>Toda cena de investigação possui uma estrutura que vocês devem desvendar:</p>
+                <ul>
+                    <li><strong>1. O Local:</strong> O ambiente narrado pelo Mestre (cheiros, iluminação, sons).</li>
+                    <li><strong>2. As Pistas:</strong> Haverá pistas falsas e verdadeiras espalhadas. Encontrar as pistas verdadeiras é o que dita o avanço de vocês.</li>
+                    <li><strong>3. Os Obstáculos:</strong> Coisas que dificultam a busca, como o tempo correndo, portas trancadas, puzzles ou inimigos rondando.</li>
+                    <li><strong>4. A Revelação:</strong> O momento em que as pistas se conectam e liberam o acesso ao próximo cenário ou verdade oculta.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- MECÂNICA: CRAFTING -->
+        <div class="step">
+            <div class="step-header">MECÂNICA 3: Sistema de Crafting e Forja</div>
+            <div class="step-content">
+                <p>A sucata é o seu melhor amigo. Em locais como a Garagem de Maquinário ou a Oficina do Hank, jogadores com a perícia <em>Ofícios</em> podem transformar <strong>UMP (Unidades de Matéria-Prima)</strong> em armas, defesas e armadilhas.</p>
+                
+                <div class="data-block">
+                    <h3>Bônus de Equipamento Fabricado</h3>
+                    <p>Armas bem fabricadas e modificadas por vocês podem receber melhorias exclusivas:</p>
+                    <ul>
+                        <li><strong>Letais:</strong> Ganha dado extra no teste de ataque.</li>
+                        <li><strong>Perfurantes:</strong> Ignora metade da armadura inimiga.</li>
+                        <li><strong>Afiadas:</strong> +1 de dano daquele tipo.</li>
+                        <li><strong>Pesadas:</strong> +2 de dano daquele tipo.</li>
+                    </ul>
+                </div>
+
+                <h3>O Processo de Criação</h3>
+                <p>Para criar um equipamento do zero, você precisa de conhecimento prévio (ou projeto) e uma estrutura adequada (bancada). O processo consome tempo e exige testes divididos em 4 etapas vitais:</p>
+                <ul>
+                    <li><strong>1. Design:</strong> Projetar como a arma ou modificação vai funcionar.</li>
+                    <li><strong>2. Refino:</strong> Preparar o material. Falhar aqui cria um item "frágil".</li>
+                    <li><strong>3. Tratamento:</strong> Temperar o metal ou reforçar os componentes. O sucesso garante durabilidade.</li>
+                    <li><strong>4. Junção/Finalização:</strong> A montagem final. Falhar aqui significa que o item pode desmontar durante o combate.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- CATÁLOGO DE ARSENAL E EQUIPAMENTOS -->
+        <div class="step">
+            <div class="step-header">CATÁLOGO DE ARSENAL E EQUIPAMENTOS</div>
+            <div class="step-content">
+                <p><strong>Em Pine Creek, a distância é medida em Zonas:</strong></p>
+                <ul>
+                    <li><strong>Curto:</strong> Mesma Zona (Corpo a Corpo ou à queima-roupa).</li>
+                    <li><strong>Médio:</strong> Zona Adjacente (A zona logo ao lado).</li>
+                    <li><strong>Longo:</strong> Zonas Distantes (2 ou mais zonas, requer linha de visão limpa).</li>
+                </ul>
+
+                <h3>🪓 1. Armas Corpo a Corpo (Melee)</h3>
+                <p>Ataques focados no Atributo <strong>PODER (POD)</strong> ou <strong>AGILIDADE (AGI)</strong>. O Dano é subtraído diretamente da Vida da parte do corpo atingida.</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Arma</th>
+                            <th>Dano Base</th>
+                            <th>Alcance</th>
+                            <th>Propriedade Especial (Sistema KAOS)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Faca Curta / Soqueira</td><td>1d4</td><td>Curto</td><td><strong>Rápida:</strong> Permite sacar como ação livre.</td></tr>
+                        <tr><td>Cacetete / Corrente</td><td>1d4 a 1d6</td><td>Curto</td><td><strong>Contundente:</strong> Ao acertar a Cabeça ou Tronco, causa +1d6 de Dano Tático.</td></tr>
+                        <tr><td>Espada Curta / Facão</td><td>1d6</td><td>Curto</td><td><strong>Afiada:</strong> +1 de Dano Fixo ou +1 no Dano de Hemorragia.</td></tr>
+                        <tr><td>Machado Curto / Médio</td><td>1d6 a 1d8</td><td>Curto</td><td><strong>Pesada:</strong> +2 de Dano Fixo do mesmo tipo.</td></tr>
+                        <tr><td>Lança / Tridente</td><td>1d6</td><td>Curto</td><td><strong>Perfurante:</strong> Ignora metade da RD (Armadura) do alvo.</td></tr>
+                        <tr><td>Martelo Médio / Maça</td><td>1d8</td><td>Curto</td><td><strong>Brutal:</strong> Ao usar Intenção Complexa, causa +1d6 de Dano Brutal (quebra de ossos).</td></tr>
+                        <tr><td>Taser (Choque)</td><td>1d4</td><td>Curto</td><td><strong>Elétrica:</strong> Em vez de vida, causa +1d6 de Dano de Desgaste direto no Vigor do alvo.</td></tr>
+                        <tr><td>Katana / Espada Longa</td><td>1d10</td><td>Curto</td><td><strong>Sanguinária (2 Mãos):</strong> Inflige 1d6 de Dano de Hemorragia contínuo por turno.</td></tr>
+                        <tr><td>Martelo Grande (Marreta)</td><td>1d12</td><td>Curto</td><td><strong>Esmagadora (2 Mãos):</strong> Causa +2d6 de Dano Brutal, forçando teste de Físico para não cair.</td></tr>
+                    </tbody>
+                </table>
+
+                <h3>🔫 2. Armas de Fogo e Arremesso</h3>
+                <p>Ataques focados no Atributo <strong>PERCEPÇÃO (PER)</strong>.</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Arma</th>
+                            <th>Dano Base</th>
+                            <th>Alcance</th>
+                            <th>Efeito / Munição</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Arco / Besta</td><td>1d6 / 1d8</td><td>Médio</td><td>Silenciosa / Perfurante (Flechas/Virotes).</td></tr>
+                        <tr><td>Pistola / Revólver</td><td>1d8</td><td>Curto</td><td>Arma de backup. Balas curtas (Pentes de 6 a 12).</td></tr>
+                        <tr><td>Revólver Magnum</td><td>1d12</td><td>Curto</td><td><strong>Letal:</strong> Rola +1 dado de perícia no teste (chance maior de Eco/Crítico).</td></tr>
+                        <tr><td>Rifle de Assalto</td><td>2d6</td><td>Médio</td><td>Pode gastar Intenção Complexa para dar Tiro de Supressão (+1d6 Dano Tático em área).</td></tr>
+                        <tr><td>Escopeta / Espingarda</td><td>3d8</td><td>Curto</td><td><strong>Devastadora:</strong> Dano massivo na mesma zona. Se atirar no Tronco, destrói órgãos.</td></tr>
+                        <tr><td>Rifle Sniper / Caça</td><td>2d8 / 2d10</td><td>Longo</td><td><strong>Pesada:</strong> +2 de Dano e +2 em Percepção se tiver tempo para mirar.</td></tr>
+                        <tr><td>Lança-Foguetes</td><td>8d10</td><td>Longo</td><td><strong>Explosão em Área:</strong> Transforma a Zona em Terreno Arrasado. Destrói barricadas.</td></tr>
+                    </tbody>
+                </table>
+
+                <div class="data-block">
+                    <h3>🛡️ 3. Armaduras e Escudos (Proteção e RD)</h3>
+                    <p>As armaduras protegem partes específicas do corpo, fornecendo Redução de Dano (RD) que absorve os pontos de dano antes de chegarem à sua Vida Base.</p>
+                    <ul>
+                        <li><strong>Proteções Leves (Colete de Kevlar / Nanofibras):</strong><br>Defesa: RD 2 no Tronco Superior e Inferior.<br>Vantagem: Não penaliza movimento nem furtividade.</li>
+                        <li><strong>Proteções Médias (Traje Tático / Armadura Corporal):</strong><br>Defesa: RD 3 no Tronco e nos Braços.<br>Penalidade: Ocupa 3 a 4 slots de peso.</li>
+                        <li><strong>Proteções Pesadas (Traje Forças Especiais / Combate Completo):</strong><br>Defesa: RD 4 ou 5 no Tronco, Braços e Pernas.<br>Penalidade: Ocupa 5 a 6 slots. Testes de Furtividade e Atletismo sofrem desvantagem (Rola 2d10 e fica com o pior).</li>
+                        <li><strong>Escudos (Pequeno a Tático):</strong><br>Defesa: Um escudo não dá RD passiva, mas possui a propriedade Defensiva. O jogador pode gastar 1 Intenção Normal de "Defesa" e justificar o uso do escudo para reduzir qualquer dano balístico/cortante pela metade (ou tentar anular com Intenção Extrema).</li>
+                    </ul>
+                </div>
+
+                <div class="data-block" id="alien-block" style="border-left-color: var(--alert-red); background: rgba(255, 51, 51, 0.1); user-select: none;">
+                    <h3 id="alien-title" class="glitch-hover" style="color: var(--alert-red); border-bottom-color: var(--alert-red); margin-top: 5px; cursor: help;" oncontextmenu="handleAlienClick(event)">⍙ 4. ⏃⍀⌇⟒⋏⏃⌰ ⏃⌰⟟⟒⋏ (⏃⎐⟟⌇⍜ ⎅⟒ ⌰⟒⏁⏃⌰⟟⎅⏃⎅⟒)</h3>
+                    
+                    <div id="alien-gibberish" style="color: var(--alert-red); font-family: monospace; letter-spacing: 2px;">
+                        <p>⟒⌇⏁⏃⌇ ⏃⍀⋔⏃⌇ ⌿⍜⌇⌇⎍⟒⋔ ⏃ ⌿⍀⍜⌿⍀⟟⟒⎅⏃⎅⟒ ⌿⟒⍀⎎⎍⍀⏃⋏⏁⟒ ⟒⌖⏁⍀⟒⋔⍜. ⟒⌰⏃⌇ ⟟☌⋏⍜⍀⏃⋔ ⍾⎍⏃⌰⍾⎍⟒⍀ ⍀⎅ ⎅⟒ ⏃⍀⋔⏃⎅⎍⍀⏃⌇ ⊑⎍⋔⏃⋏⏃⌇...</p>
+                        <p>[ ☊⍜⍀⍀⎍⌿⏁⟒⎅ ⎅⏃⏁⏃ ⎎⍜⎍⋏⎅ ]</p>
+                    </div>
+
+                    <div id="alien-content" style="display: none;">
+                        <p style="color: var(--alert-red);"><strong>Atenção:</strong> Estas armas possuem a propriedade <strong>Perfurante Extremo</strong>. Elas ignoram qualquer RD de armaduras humanas comuns (Kevlar não para energia). Só as "Armaduras Anti-Alienígenas" (nível 3) oferecem resistência a elas.</p>
+                        <ul>
+                            <li><strong>Armas Brancas Alien (Lâminas de Plasma / Foice de Plasma - 1d8 a 1d10):</strong> Causam Dano Térmico. Ao acertar, a cauterização brutal causa +1d6 de Dano de Desgaste (Dor) no Vigor.</li>
+                            <li><strong>Armas de Contenção (Canhão de Grávitons / Clavas Gravíticas - 1d8 a 1d12):</strong> Causam Dano Gravitacional. O alvo é esmagado contra o chão, sofrendo +2d6 de Dano Brutal e sendo forçado a gastar o dobro de intenções para se levantar.</li>
+                            <li><strong>Armas de Fogo Alien (Pistola de Plasma / Blaster de Energia - 2d8 a 3d6):</strong> Causam Dano Energético/Térmico. Disparos limpos que derretem carne.</li>
+                            <li><strong>Armas de Fim de Jogo (Canhão de Singularidade / Antimatéria - 8d10 a 10d12):</strong> Causam Dano Desintegrante. Se a Vida da parte do corpo atingida chegar a 0, o membro deixa de existir. Dano massivo capaz de obliterar Zonas inteiras.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <script>
+                    let alienClicks = 0;
+                    function handleAlienClick(e) {
+                        e.preventDefault(); // Impede o menu de contexto padrão do botão direito
+                        alienClicks++;
+                        
+                        // Faz um glitch visual rápido no bloco para dar feedback
+                        const block = document.getElementById('alien-block');
+                        block.style.opacity = '0.5';
+                        setTimeout(() => block.style.opacity = '1', 50);
+
+                        if (alienClicks >= 10) {
+                            const title = document.getElementById('alien-title');
+                            title.innerText = '👽 4. Arsenal Alienígena (Aviso de Letalidade)';
+                            title.style.cursor = 'default';
+                            title.oncontextmenu = null; // Remove a interatividade
+                            title.classList.remove('glitch-hover');
+                            
+                            document.getElementById('alien-gibberish').style.display = 'none';
+                            document.getElementById('alien-content').style.display = 'block';
+
+                            const scannerGibberish = document.getElementById('scanner-gibberish');
+                            const scannerContent = document.getElementById('scanner-content');
+                            if (scannerGibberish && scannerContent) {
+                                scannerGibberish.style.display = 'none';
+                                scannerContent.style.display = 'block';
+                            }
+                        }
+                    }
+                </script>
+
+                <div class="data-block">
+                    <h3 style="margin-top: 5px;">🧰 5. Gadgets, Explosivos e Consumíveis</h3>
+                    <p>Qualquer equipamento utilitário usado no momento certo é considerado "Vantajoso", garantindo +2 no teste da perícia ou permitindo rolar dois dados de Caos (d6) e escolher o melhor.</p>
+                    
+                    <p><strong>Explosivos (Afetam a Zona inteira):</strong></p>
+                    <ul>
+                        <li><strong>Granada de Fragmentação / Mina Antipessoal:</strong> Causa 3d6 ou 4d6 de Dano de Estilhaço em todos na Zona. Destrói coberturas.</li>
+                        <li><strong>C4 (Detonador Remoto):</strong> Causa impressionantes 5d6 de Dano de Estilhaço. Transforma Terrenos em Condição Destruída.</li>
+                        <li><strong>Granada de Atordoamento (Stun):</strong> Em vez da antiga condição, agora causa 2d6 de Dano Tático/Mental na Zona, desorientando os inimigos (Dano na Sanidade/Vida).</li>
+                        <li><strong>Granada de Fumaça:</strong> Zera a linha de visão da Zona. Cria cobertura perfeita para Furtividade.</li>
+                        <li><strong>Spray de Pimenta / Taser de Distância:</strong> Causa Cegueira/Paralisia temporária (Mecanicamente: Alvo perde 1 a 2 intenções do turno).</li>
+                    </ul>
+
+                    <p><strong>Utilidades e Modificadores:</strong></p>
+                    <ul>
+                        <li><strong>Kit de Primeiros Socorros:</strong> Vital. Usado com a perícia Medicina, é a única forma de curar a "Vida Base" de uma parte específica do corpo (Braço, Perna, Cabeça) rasgada pelos aliens.</li>
+                        <li><strong>Mira Laser / Telescópica:</strong> Garante +2 nos testes de Pontaria a médias e longas distâncias.</li>
+                        <li><strong>Óculos de Visão Térmica / Lanterna Tática:</strong> Ignoram penalidades de escuridão total para a perícia Investigação ou Prontidão.</li>
+                        <li id="scanner-gibberish" style="color: var(--alert-red); font-family: monospace; letter-spacing: 2px;">[ ☊⍜⍀⍀⎍⌿⏁⟒⎅ ⎅⏃⏁⏃ ⎎⍜⎍⋏⎅ ]</li>
+                        <li id="scanner-content" style="display: none;"><strong>Scanner de Energia Alienígena:</strong> Permite usar a perícia Erudição para rastrear radiação ou invisibilidade dos Cinzentos.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- MECÂNICA 4: EVOLUÇÃO E TREINO -->
+        <div class="step">
+            <div class="step-header">MECÂNICA 4: Sistema de Evolução (Dias Livres)</div>
+            <div class="step-content">
+                <p>Durante o tempo livre na fazenda, vocês podem treinar seus corpos e mentes. No sistema KAOS, a evolução é orgânica: <strong>você só melhora aquilo que pratica!</strong> Cada Atributo e Perícia tem sua própria barra de XP.</p>
+                
+                <h3>Custo de Nível</h3>
+                <ul>
+                    <li><strong>+1 Nível de Perícia:</strong> Custa 50 XP na barra daquela perícia.</li>
+                    <li><strong>+1 Nível de Atributo:</strong> Custa 100 XP na barra daquele atributo.</li>
+                </ul>
+                <p style="color: var(--alert-red); font-size: 0.85rem;"><em>⚠️ Lembre-se: Ao aumentar Físico, Agilidade, Poder, Intelecto ou Presença, sua Vida, Vigor, Alma ou Mental devem ser recalculados. A ficha digital faz isso automaticamente!</em></p>
+
+                <h3>Como Treinar (A Mecânica)</h3>
+                <p>A cada "Dia Livre", narre no chat como você vai praticar (Ex: <em>"Vou treinar Atletismo correndo no milharal"</em>). Role seus <strong>dados daquele atributo/perícia + 1 Dado de Caos (d6)</strong>. O rendimento do dia é baseado apenas no dado de Caos:</p>
+                
+                <div class="data-block" style="border-left-color: var(--accent-green);">
+                    <ul style="margin: 0; padding-left: 20px;">
+                        <li style="margin-bottom: 8px;"><strong style="color: var(--alert-red);">Face 1 (Acidente):</strong> 0 XP ganhos. Você forçou o limite e se machucou! Sofre <strong>1d6 de Dano de Desgaste</strong> (Vida ou Vigor) por lesão/exaustão. Precisa se curar antes de treinar pesado novamente.</li>
+                        <li style="margin-bottom: 8px;"><strong>Faces 2 e 3 (Normal):</strong> Treino rotineiro. Você ganha <strong>+5 XP</strong>.</li>
+                        <li style="margin-bottom: 8px;"><strong>Faces 4 e 5 (Excelente):</strong> Pegou o jeito rapidamente. Você ganha <strong>+10 XP</strong>.</li>
+                        <li><strong style="color: var(--accent-green);">Face 6 (Epifania):</strong> Pico de compreensão absoluta! Você ganha incríveis <strong>+15 XP</strong> na barra.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- MECÂNICA 5: PONTOS DE EVOLUÇÃO (PE) -->
+        <div class="step">
+            <div class="step-header">MECÂNICA 5: Pontos de Evolução (PE)</div>
+            <div class="step-content">
+                <p>Enquanto Atributos e Perícias sobem com o XP ganho em treinos, a sua experiência prática sobrevivendo a anomalias é representada pelos <strong>Pontos de Evolução (PE)</strong>.</p>
+                
+                <h3>🎖️ Como Ganhar PE?</h3>
+                <p>Os PEs são concedidos pelo Mestre como recompensa (geralmente de <strong>2 a 5 PE</strong>) ao final de uma sessão de jogo, ao cumprir grandes missões ou sobreviver a horrores e combates insanos.</p>
+
+                <h3>🛒 Onde Gastar seus PEs</h3>
+                <p>Nos momentos de descanso (Cenas de Interlúdio), você pode gastar os PEs guardados na sua ficha para transcender os limites naturais do seu corpo:</p>
+                
+                <div class="data-block" style="border-left-color: var(--highlight);">
+                    <ul style="margin: 0; padding-left: 20px;">
+                        <li style="margin-bottom: 8px;"><strong>Nova Habilidade de Arquétipo <span style="color: var(--highlight);">(Custa 3 PE)</span>:</strong> Desbloqueia um novo Nódulo ou Tática dentro do seu caminho de Arquétipo (Vanguarda, Artífice, etc).</li>
+                        <li style="margin-bottom: 8px;"><strong>Técnica do Caos <span style="color: var(--highlight);">(Custa 3 PE)</span>:</strong> Aumenta sua conexão com os Pilares (Aprimoração, Manipulação, etc.) ou cria novas Artes.</li>
+                        <li style="margin-bottom: 8px;"><strong>+5 Vida Extra <span style="color: var(--highlight);">(Custa 1 PE)</span>:</strong> Aumenta +5 Pontos de Vida permanentemente em <em>uma</em> parte do corpo (Ex: Peito, Cabeça). Ignora o limite do Atributo Físico!</li>
+                        <li style="margin-bottom: 8px;"><strong>+5 Saúde Mental ou Alma <span style="color: var(--highlight);">(Custa 1 PE)</span>:</strong> Garante maior resistência contra o terror paranormal (Mental) ou maior resiliência energética (Alma).</li>
+                        <li><strong>+2 Vigor Extra <span style="color: var(--highlight);">(Custa 1 PE)</span>:</strong> O combustível vital do combate! O bônus é menor (+2) justamente porque ter muito Vigor lhe torna implacável nas lutas.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Interactive Accordion Logic
+        const steps = document.querySelectorAll('.step-header');
+        
+        steps.forEach(step => {
+            step.addEventListener('click', function() {
+                const parent = this.parentElement;
+                
+                // Toggle the clicked step
+                parent.classList.toggle('active');
+            });
+        });
+        
+        // Open the first step by default
+        if(steps.length > 0) {
+            steps[0].parentElement.classList.add('active');
+        }
+    </script>
+</body>
+</html>
